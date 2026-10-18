@@ -1,19 +1,19 @@
-// المسار: components/Settings/SecurityTab.js
+// المسار: components/Settings/SecurityTab.js (النسخة المطورة بذكاء التوليد التلقائي)
 
 window.SecurityTab = function({ showToast }) {
     const { useState, useEffect } = React;
     const [isLoading, setIsLoading] = useState(false);
     const [hasCode, setHasCode] = useState(false); 
+    
     const [formData, setFormData] = useState({
         currentPassword: '',
-        securityCode: '',
-        confirmCode: ''
+        security_key: ''
     });
 
     const session = JSON.parse(localStorage.getItem('MentraLocal_Session') || '{}');
     const userId = session.user_id;
 
-    // جلب حالة مفتاح الأمان عند فتح الصفحة
+    // التحقق مما إذا كان لديه مفتاح بالفعل
     useEffect(() => {
         const fetchUserData = async () => {
             if (!userId) return;
@@ -25,22 +25,22 @@ window.SecurityTab = function({ showToast }) {
         fetchUserData();
     }, [userId]);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    // 🚀 دالة توليد المفتاح الذكي (كما في نظام العيادات)
+    const generateRandomKey = () => {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let key = '';
+        for (let i = 0; i < 12; i++) {
+            if (i > 0 && i % 4 === 0) key += '-';
+            key += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        setFormData({ ...formData, security_key: key });
     };
 
     const handleSave = async (e) => {
         e.preventDefault();
         
-        // التحقق من أن الرمز 6 أرقام فقط
-        const codeRegex = /^[0-9]{6}$/;
-        if (!codeRegex.test(formData.securityCode)) {
-            showToast("مفتاح الأمان يجب أن يتكون من 6 أرقام فقط", "error");
-            return;
-        }
-
-        if (formData.securityCode !== formData.confirmCode) {
-            showToast("مفتاح الأمان غير متطابق في الخانتين", "error");
+        if (!formData.security_key.trim()) {
+            showToast("الرجاء توليد أو إدخال مفتاح أمان", "error");
             return;
         }
 
@@ -48,18 +48,19 @@ window.SecurityTab = function({ showToast }) {
         try {
             const user = await window.db.users.get(userId);
             
+            // التأكد من هوية المحامي
             if (user.password !== formData.currentPassword) {
                 throw new Error("كلمة المرور الحالية غير صحيحة");
             }
 
-            // حفظ المفتاح في قاعدة البيانات
+            // حفظ المفتاح الاحترافي
             await window.db.users.update(userId, {
-                recovery_code: formData.securityCode
+                recovery_code: formData.security_key.trim()
             });
 
             setHasCode(true);
-            showToast("تم حفظ مفتاح الأمان بنجاح", "success");
-            setFormData({ currentPassword: '', securityCode: '', confirmCode: '' });
+            showToast("تم اعتماد مفتاح الأمان بنجاح", "success");
+            setFormData({ currentPassword: '', security_key: '' });
 
         } catch (error) {
             showToast(error.message, "error");
@@ -75,9 +76,9 @@ window.SecurityTab = function({ showToast }) {
                     <i className="fas fa-shield-halved"></i>
                 </div>
                 <div>
-                    <h3 className="font-black text-xl text-[#1E3A8A]">مفتاح الأمان (استعادة الدخول)</h3>
+                    <h3 className="font-black text-xl text-[#1E3A8A]">مفتاح الاستعادة والأمان</h3>
                     <p className="text-slate-500 text-sm font-bold mt-1">
-                        قم بتعيين رمز سري مكون من 6 أرقام لاستخدامه في حالة نسيان كلمة المرور للوصول لبياناتك.
+                        يُستخدم لاستعادة الحساب للوصول لبياناتك في حال نسيان كلمة المرور.
                     </p>
                 </div>
             </div>
@@ -87,64 +88,67 @@ window.SecurityTab = function({ showToast }) {
                     <i className="fas fa-check-circle text-lg mt-0.5"></i>
                     <div>
                         <p>مفتاح الأمان مُفعّل لحسابك وجاهز للاستخدام.</p>
-                        <p className="text-xs font-semibold mt-1">إذا أردت تغييره، قم بإدخال البيانات أدناه وسيتم استبدال المفتاح القديم.</p>
+                        <p className="text-xs font-semibold mt-1">لإنشاء مفتاح جديد، قم بتوليد رمز جديد وسيتم استبدال القديم.</p>
                     </div>
                 </div>
             )}
 
-            <form onSubmit={handleSave} className="max-w-xl space-y-5">
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6">
-                    <label className="block text-slate-700 text-sm font-black mb-2">كلمة المرور الحالية (لتأكيد هويتك)</label>
+            {/* 🚀 رسالة التوعية الذكية المأخوذة من نظام العيادات */}
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 md:p-5 flex items-start gap-3 mb-6">
+                <i className="fas fa-info-circle text-amber-500 text-xl mt-1 shrink-0"></i>
+                <p className="text-xs md:text-sm font-bold text-amber-700 leading-relaxed">
+                    نظراً لأن النظام يعمل (Offline) بدون إنترنت، لا توجد إمكانية لاستعادة الباسورد عبر الإيميل أو الهاتف. 
+                    لذلك، <strong className="text-amber-900">يجب عليك توليد مفتاح أمان والاحتفاظ به في مكان آمن (في ورقة خارجية)</strong>. في حال نسيان الباسورد، سيطلب منك النظام هذا المفتاح.
+                </p>
+            </div>
+
+            <form onSubmit={handleSave} className="max-w-2xl space-y-6">
+                
+                {/* مفتاح الأمان مع زر التوليد */}
+                <div>
+                    <label className="block text-slate-700 text-sm font-black mb-2">مفتاح الأمان (Recovery Key) <span className="text-rose-500">*</span></label>
+                    <div className="flex flex-col md:flex-row gap-3">
+                        <input 
+                            type="text" 
+                            dir="ltr"
+                            placeholder="مثال: A1B2-C3D4-E5F6"
+                            value={formData.security_key} 
+                            onChange={e => setFormData({...formData, security_key: e.target.value.toUpperCase()})} 
+                            required
+                            className="flex-1 p-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl text-lg font-black tracking-widest text-center text-[#1E3A8A] focus:border-[#D4AF37] outline-none uppercase placeholder:text-sm placeholder:tracking-normal transition" 
+                        />
+                        <button 
+                            type="button" 
+                            onClick={generateRandomKey}
+                            className="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-6 py-3.5 rounded-xl transition-colors shrink-0 text-sm flex items-center justify-center gap-2 active:scale-95 border border-slate-200"
+                        >
+                            <i className="fas fa-random text-[#D4AF37]"></i> توليد تلقائي
+                        </button>
+                    </div>
+                </div>
+
+                {/* تأكيد الهوية */}
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <label className="block text-slate-700 text-sm font-black mb-2">كلمة المرور الحالية (لتأكيد هويتك) <span className="text-rose-500">*</span></label>
                     <input 
                         type="password" 
                         name="currentPassword"
                         value={formData.currentPassword}
-                        onChange={handleChange}
+                        onChange={e => setFormData({...formData, currentPassword: e.target.value})}
                         required
                         dir="ltr"
-                        className="w-full p-3 rounded-lg border-2 border-slate-200 focus:border-[#D4AF37] outline-none text-left font-sans transition-colors"
+                        className="w-full p-3 rounded-lg border-2 border-slate-200 focus:border-[#D4AF37] outline-none text-left transition-colors"
                         placeholder="••••••••"
                     />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label className="block text-slate-700 text-sm font-black mb-2">مفتاح الأمان الجديد (6 أرقام)</label>
-                        <input 
-                            type="password" 
-                            name="securityCode"
-                            value={formData.securityCode}
-                            onChange={handleChange}
-                            maxLength="6"
-                            required
-                            dir="ltr"
-                            className="w-full p-3 rounded-lg border-2 border-slate-200 focus:border-[#D4AF37] outline-none text-center font-black tracking-[0.5em] transition-colors"
-                            placeholder="000000"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-slate-700 text-sm font-black mb-2">تأكيد مفتاح الأمان</label>
-                        <input 
-                            type="password" 
-                            name="confirmCode"
-                            value={formData.confirmCode}
-                            onChange={handleChange}
-                            maxLength="6"
-                            required
-                            dir="ltr"
-                            className="w-full p-3 rounded-lg border-2 border-slate-200 focus:border-[#D4AF37] outline-none text-center font-black tracking-[0.5em] transition-colors"
-                            placeholder="000000"
-                        />
-                    </div>
                 </div>
 
                 <button 
                     type="submit" 
                     disabled={isLoading}
-                    className="mt-4 w-full md:w-auto bg-[#1E3A8A] hover:bg-blue-900 text-white font-black py-3 px-8 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+                    className="w-full md:w-auto bg-[#1E3A8A] hover:bg-blue-900 text-white font-black py-4 px-10 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 active:scale-95"
                 >
-                    {isLoading ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-save"></i>}
-                    حفظ مفتاح الأمان
+                    {isLoading ? <i className="fas fa-spinner fa-spin"></i> : <i className="fas fa-lock"></i>}
+                    اعتماد وحفظ مفتاح الأمان
                 </button>
             </form>
         </div>

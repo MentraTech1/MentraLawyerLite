@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -100,8 +101,7 @@
 
             const [formData, setFormData] = useState({ firmName: '', ownerName: '', email: '', password: '' });
             
-            // بيانات استعادة الدخول بمفتاح الأمان
-            const [recoveryData, setRecoveryData] = useState({ email: '', code: '' });
+            const [recoveryData, setRecoveryData] = useState({ key: '', newEmail: '', newPassword: '' });
 
             useEffect(() => {
                 const initApp = async () => {
@@ -163,21 +163,38 @@
                 } catch (err) { setError("كلمة المرور غير صحيحة"); setLoading(false); }
             };
 
-            // 🌟 وظيفة الدخول باستخدام مفتاح الأمان (الجديدة) 🌟
+            // 🌟 وظيفة استعادة الحساب المطورة مع التحقق 🌟
             const handleRecoveryLogin = async (e) => {
                 e.preventDefault(); setLoading(true); setError('');
                 try {
-                    const email = recoveryData.email.trim().toLowerCase();
-                    const user = await window.db.users.where('email').equalsIgnoreCase(email).first();
+                    if(!recoveryData.key) throw new Error("يرجى إدخال مفتاح الأمان");
+
+                    // تنظيف المفتاح
+                    const cleanedKey = recoveryData.key.trim().toUpperCase();
                     
-                    if (!user) throw new Error("لا يوجد حساب مسجل بهذا البريد الإلكتروني");
-                    if (!user.recovery_code) throw new Error("لم يتم إعداد مفتاح أمان لهذا الحساب مسبقاً من الإعدادات.");
-                    if (user.recovery_code !== recoveryData.code) throw new Error("مفتاح الأمان غير صحيح");
+                    // 1. إيجاد المستخدم صاحب المفتاح
+                    const user = await window.db.users.where('recovery_code').equals(cleanedKey).first();
+                    
+                    if (!user) throw new Error("مفتاح الأمان غير صحيح أو غير مسجل في النظام.");
                     if (user.is_active === 0) throw new Error("هذا الحساب موقوف");
+
+                    // 2. 🚀 التعديل هنا: التحقق من أن الإيميل الجديد غير محجوز لحساب آخر 🚀
+                    const newEmailCleaned = recoveryData.newEmail.trim().toLowerCase();
+                    const existingUserWithEmail = await window.db.users.where('email').equalsIgnoreCase(newEmailCleaned).first();
+
+                    if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
+                        throw new Error("هذا البريد الإلكتروني مسجل مسبقاً في حساب آخر، يرجى استخدام بريد مختلف.");
+                    }
+
+                    // 3. تحديث بيانات المستخدم
+                    await window.db.users.update(user.id, { 
+                        email: newEmailCleaned, 
+                        password: recoveryData.newPassword 
+                    });
 
                     const firm = await window.db.law_firms.get(user.firm_id);
                     
-                    // إنشاء الجلسة وتوجيه المستخدم للوحة التحكم
+                    // 4. الدخول المباشر
                     localStorage.setItem('MentraLocal_Session', JSON.stringify({
                         user_id: user.id, firm_id: firm.id, name: user.name, role: user.role, firm_name: firm.name
                     }));
@@ -298,27 +315,57 @@
                                 </form>
                             )}
 
-                            {/* 🌟 شاشة استعادة الدخول بمفتاح الأمان 🌟 */}
+                            {/* 🌟 شاشة استعادة الحساب المطورة 🌟 */}
                             {activeTab === 'recovery' && (
-                                <form onSubmit={handleRecoveryLogin} className="space-y-5 fade-up">
-                                    <div className="text-center mb-6">
-                                        <div className="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner"><i className="fas fa-shield-halved"></i></div>
-                                        <h3 className="text-lg font-black text-[#1E3A8A] mb-2">استعادة الدخول للنظام</h3>
-                                        <p className="text-xs font-bold text-slate-500 leading-relaxed">أدخل بريدك الإلكتروني ومفتاح الأمان (6 أرقام) الذي قمت بإنشائه مسبقاً من الإعدادات للوصول لبياناتك.</p>
+                                <form onSubmit={handleRecoveryLogin} className="space-y-4 fade-up">
+                                    <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl mb-4 text-[11px] md:text-xs font-bold text-amber-800 flex gap-2">
+                                        <i className="fas fa-info-circle mt-0.5 shrink-0"></i>
+                                        <p>أدخل مفتاح الأمان الخاص بك لتتمكن من تغيير البريد الإلكتروني وكلمة المرور والدخول للمكتب مباشرة.</p>
                                     </div>
-                                    
+
                                     <div className="input-group">
-                                        <input type="email" value={recoveryData.email} onChange={(e) => setRecoveryData({...recoveryData, email: e.target.value})} required dir="ltr" className="input-field text-left placeholder:text-right" placeholder="البريد الإلكتروني لحسابك" />
+                                        <input 
+                                            type="text" 
+                                            value={recoveryData.key} 
+                                            onChange={(e) => setRecoveryData({...recoveryData, key: e.target.value.toUpperCase()})} 
+                                            required 
+                                            dir="ltr" 
+                                            className="input-field text-center placeholder:text-right uppercase tracking-widest font-black text-[#1E3A8A]" 
+                                            placeholder="مفتاح الأمان (مثال: A1B2-C3D4-E5F6)" 
+                                        />
+                                        <i className="fas fa-shield-alt input-icon"></i>
+                                    </div>
+
+                                    <div className="input-group">
+                                        <input 
+                                            type="email" 
+                                            value={recoveryData.newEmail} 
+                                            onChange={(e) => setRecoveryData({...recoveryData, newEmail: e.target.value})} 
+                                            required 
+                                            dir="ltr" 
+                                            className="input-field text-left placeholder:text-right" 
+                                            placeholder="البريد الإلكتروني الجديد" 
+                                        />
                                         <i className="fas fa-envelope input-icon"></i>
                                     </div>
-                                    
-                                    <div className="input-group">
-                                        <input type="password" value={recoveryData.code} onChange={(e) => setRecoveryData({...recoveryData, code: e.target.value})} required maxLength="6" dir="ltr" className="input-field text-center tracking-[0.5em] font-black text-xl" placeholder="000000" />
-                                        <i className="fas fa-key input-icon"></i>
+
+                                    <div className="input-group relative">
+                                        <input 
+                                            type={showPassword ? "text" : "password"} 
+                                            value={recoveryData.newPassword} 
+                                            onChange={(e) => setRecoveryData({...recoveryData, newPassword: e.target.value})} 
+                                            required 
+                                            minLength="6" 
+                                            dir="ltr" 
+                                            className="input-field text-left placeholder:text-right pr-12" 
+                                            placeholder="كلمة المرور الجديدة" 
+                                        />
+                                        <i className="fas fa-lock input-icon"></i>
+                                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-[#1E3A8A] transition-colors focus:outline-none"><i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
                                     </div>
 
                                     <button type="submit" disabled={loading} className="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-4 rounded-2xl shadow-lg shadow-amber-500/20 transition-all mt-4 flex justify-center items-center gap-2 text-lg">
-                                        {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fas fa-unlock"></i> الدخول باستخدام المفتاح</>}
+                                        {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fas fa-check-circle"></i> تحديث البيانات والدخول</>}
                                     </button>
 
                                     <button type="button" onClick={() => {setActiveTab('login'); setError('');}} className="w-full text-center text-slate-500 hover:text-slate-800 font-bold text-sm transition-colors pt-4 pb-2">

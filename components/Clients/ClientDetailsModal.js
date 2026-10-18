@@ -20,38 +20,43 @@ window.ClientDetailsModal = function({ client, firmId, showToast, onClose, onEdi
             if (!client || !client.id || !window.db) return;
             setLoading(true);
             try {
-                // 1. جلب قضايا الموكل
+                // 1. جلب قضايا وتوكيلات الموكل
                 const cases = await window.db.cases.where('client_id').equals(client.id).toArray();
-                setClientCases(cases);
-
-                // 2. جلب توكيلات الموكل
                 const poas = await window.db.power_of_attorneys.where('client_id').equals(client.id).toArray();
-                setClientPoas(poas);
-
-                // 3. جلب وسحب الحسابات والماليات الخاصة بالموكل
+                
+                // 🚀 التعديل هنا: تطبيق نفس المنطق المالي السليم
                 let totalFees = 0;
                 let totalPaid = 0;
+                const caseFeesMap = {};
 
-                // احتساب الأتعاب المقررة من واقع القضايا (إن وجدت في بيانات القضية)
-                cases.forEach(c => {
-                    if (c.agreed_fees) totalFees += parseFloat(c.agreed_fees) || 0;
-                });
-
-                // جلب الدفعات النقدية المسجلة باسم الموكل
                 if (window.db.client_payments) {
                     const payments = await window.db.client_payments.where('client_id').equals(client.id).toArray();
                     payments.forEach(p => {
                         const paid = parseFloat(p.paid_amount || p.amount || 0);
+                        if (!isNaN(paid) && paid > 0) totalPaid += paid;
+
                         const total = parseFloat(p.total_amount || 0);
-                        totalPaid += paid;
-                        if (!cases.length && total > 0) totalFees += total;
+                        if (!isNaN(total) && total > 0) {
+                            if (p.case_id) {
+                                if (!caseFeesMap[p.case_id] || total > caseFeesMap[p.case_id]) {
+                                    caseFeesMap[p.case_id] = total;
+                                }
+                            } else {
+                                totalFees += total;
+                            }
+                        }
                     });
                 }
 
-                // إذا كانت الأتعاب أقل من المدفوع (تعديل منطقي)
+                Object.values(caseFeesMap).forEach(fee => {
+                    totalFees += fee;
+                });
+
                 if (totalFees < totalPaid) totalFees = totalPaid;
                 const remaining = Math.max(0, totalFees - totalPaid);
 
+                setClientCases(cases);
+                setClientPoas(poas);
                 setStats({
                     totalFees,
                     totalPaid,

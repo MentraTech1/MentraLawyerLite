@@ -6,10 +6,10 @@
 window.db = new Dexie("MentraLawyerLocalDB");
 
 // 2. بناء هيكل الجداول (Schema)
-window.db.version(1).stores({
+window.db.version(2).stores({
     law_firms: '++id, name',
     branches: '++id, firm_id, is_main_branch',
-    users: '++id, firm_id, email, role',
+    users: '++id, firm_id, email, password, role, is_active, recovery_code', 
     user_branch_access: '++id, user_id, branch_id',
     
     clients: '++id, firm_id, name, phone, id_number',

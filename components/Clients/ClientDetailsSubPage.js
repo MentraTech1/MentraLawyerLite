@@ -1,15 +1,15 @@
 // المسار: components/Clients/ClientDetailsSubPage.js
 
-window.ClientDetailsSubPage = function({ client, firmId, showToast, onBack, onEditClient, onOpenPoas, onDeleteClient }) {
+window.ClientDetailsSubPage = function({ client, firmId, showToast, onBack, onEditClient, onOpenPoas, onDeleteClient, refreshTrigger }) {
     const { useState, useEffect } = React;
 
     const [stats, setStats] = useState({ totalFees: 0, totalPaid: 0, remaining: 0, casesCount: 0, poasCount: 0 });
     const [clientCases, setClientCases] = useState([]);
     const [clientPoas, setClientPoas] = useState([]);
-    const [clientPayments, setClientPayments] = useState([]); // <- جديد: حفظ الفواتير
+    const [clientPayments, setClientPayments] = useState([]); 
 
     // حالة التبويبات Tabs
-    const [activeTab, setActiveTab] = useState('cases'); // 'cases', 'poas', 'payments', 'info'
+    const [activeTab, setActiveTab] = useState('cases'); 
 
     const loadFullProfile = async () => {
         if (!client || !client.id || !window.db) return;
@@ -22,38 +22,59 @@ window.ClientDetailsSubPage = function({ client, firmId, showToast, onBack, onEd
                 payments = await window.db.client_payments.filter(p => String(p.client_id) === String(client.id)).reverse().toArray();
             }
 
-            setClientCases(cases);
-            setClientPoas(poas);
-            setClientPayments(payments); // تحديث بيانات الفواتير
-
-            // احتساب الماليات
+            // 🚀 التعديل هنا: المنطق المالي الجديد والسليم للحساب الآجل
             let totalFees = 0;
             let totalPaid = 0;
-
-            cases.forEach(c => {
-                const fee = parseFloat(c.agreed_fees || c.total_fees || c.fees || 0);
-                if (!isNaN(fee) && fee > 0) totalFees += fee;
-            });
+            const caseFeesMap = {}; // خريطة لحفظ "أعلى إجمالي متفق عليه" لكل قضية
 
             payments.forEach(p => {
+                // 1. حساب المدفوع الفعلي
                 const paid = parseFloat(p.paid_amount || p.amount || 0);
                 if (!isNaN(paid) && paid > 0) totalPaid += paid;
+
+                // 2. حساب الأتعاب المتفق عليها
                 const total = parseFloat(p.total_amount || 0);
-                if (!cases.length && !isNaN(total) && total > 0) totalFees += total;
+                if (!isNaN(total) && total > 0) {
+                    if (p.case_id) {
+                        // إذا كانت الدفعة مرتبطة بقضية، نأخذ أكبر مبلغ متفق عليه تم تسجيله لهذه القضية (لمنع التكرار عند التقسيط)
+                        if (!caseFeesMap[p.case_id] || total > caseFeesMap[p.case_id]) {
+                            caseFeesMap[p.case_id] = total;
+                        }
+                    } else {
+                        // إذا كانت دفعة عامة (غير مرتبطة بقضية)، تُضاف للإجمالي مباشرة
+                        totalFees += total;
+                    }
+                }
             });
 
+            // إضافة أتعاب القضايا للإجمالي
+            Object.values(caseFeesMap).forEach(fee => {
+                totalFees += fee;
+            });
+
+            // ربط الأتعاب بالقضايا لتظهر في قائمة القضايا بشكل صحيح
+            const enrichedCases = cases.map(c => ({
+                ...c,
+                agreed_fees: caseFeesMap[c.id] || 0
+            }));
+
+            // احتياطي أمان: لا يمكن أن يكون الإجمالي أقل من المدفوع
             if (totalFees < totalPaid) totalFees = totalPaid;
             const remaining = Math.max(0, totalFees - totalPaid);
 
+            setClientCases(enrichedCases);
+            setClientPoas(poas);
+            setClientPayments(payments);
             setStats({ totalFees, totalPaid, remaining, casesCount: cases.length, poasCount: poas.length });
         } catch (err) {
             console.error("خطأ جلب بيانات الموكل:", err);
         }
     };
 
+    // 🚀 التعديل هنا: إضافة refreshTrigger لمصفوفة الاعتماديات لتحديث الصفحة تلقائياً
     useEffect(() => {
         loadFullProfile();
-    }, [client]);
+    }, [client, refreshTrigger]);
 
     // مكون التبويبات (Tabs UI)
     const renderTabs = () => (
@@ -181,15 +202,15 @@ window.ClientDetailsSubPage = function({ client, firmId, showToast, onBack, onEd
                     <window.ClientPoasList poas={clientPoas} onOpenPoas={() => onOpenPoas(client)} />
                 )}
 
-{activeTab === 'payments' && window.ClientPaymentsList && (
-    <window.ClientPaymentsList 
-        payments={clientPayments} 
-        client={client} 
-        stats={stats} 
-        showToast={showToast} 
-        onRefresh={loadFullProfile} 
-    />
-)}
+                {activeTab === 'payments' && window.ClientPaymentsList && (
+                    <window.ClientPaymentsList 
+                        payments={clientPayments} 
+                        client={client} 
+                        stats={stats} 
+                        showToast={showToast} 
+                        onRefresh={loadFullProfile} 
+                    />
+                )}
 
                 {activeTab === 'info' && (
                     <div className="bg-white rounded-2xl md:rounded-3xl border border-slate-200 p-5 shadow-sm animate-view">

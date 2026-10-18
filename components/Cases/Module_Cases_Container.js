@@ -16,7 +16,7 @@ window.Module_Cases_Container = function({ firmId, showToast }) {
     const [tableData, setTableData] = useState([]);
     const [totalFilteredItems, setTotalFilteredItems] = useState(0);
 
-    // جلب القضايا الخام (تتحدث تلقائياً عند أي تغيير بفضل liveQuery)
+    // جلب القضايا الخام
     const rawCases = window.useLiveQuery(() => window.db.cases.where('firm_id').equals(firmId).reverse().toArray(), [firmId]) || [];
 
     useEffect(() => {
@@ -47,10 +47,20 @@ window.Module_Cases_Container = function({ firmId, showToast }) {
             const startIndex = (currentPage - 1) * itemsPerPage;
             const pagedCases = filtered.slice(startIndex, startIndex + itemsPerPage);
 
+            // 🚀 التعديل هنا: تحميل بيانات المحاكم والأنواع من LocalStorage مرة واحدة لسرعة الأداء
+            let savedCourts = [];
+            let savedTypes = [];
+            try {
+                savedCourts = JSON.parse(localStorage.getItem(`MentraLocal_Courts_${firmId}`) || '[]');
+                savedTypes = JSON.parse(localStorage.getItem(`MentraLocal_CaseTypes_${firmId}`) || '[]');
+            } catch(e) {}
+
             const enrichedCases = await Promise.all(pagedCases.map(async (c) => {
                 const client = await window.db.clients.get(c.client_id);
-                const court = c.court_id ? await window.db.global_courts.get(c.court_id) : null;
-                const type = c.case_type_id ? await window.db.global_case_types.get(c.case_type_id) : null;
+                
+                // 🚀 التعديل هنا: البحث في المصفوفات المستخرجة من LocalStorage
+                const court = c.court_id ? savedCourts.find(court => court.id === parseInt(c.court_id)) : null;
+                const type = c.case_type_id ? savedTypes.find(type => type.id === parseInt(c.case_type_id)) : null;
                 
                 return {
                     ...c,

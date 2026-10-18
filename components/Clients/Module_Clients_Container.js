@@ -158,6 +158,7 @@ window.Module_Clients_Container = function({ firmId, showToast }) {
                     onEditClient={(c) => openEditClientModal(c)}
                     onOpenPoas={(c) => openPoaModal(c)}
                     onDeleteClient={(c) => handleDeleteClient(c)}
+                    refreshTrigger={refreshTrigger} // 🚀 التعديل هنا: تمرير الإشارة
                 />
             ) : (
                 <div className="space-y-6 animate-view">
@@ -220,7 +221,7 @@ window.Module_Clients_Container = function({ firmId, showToast }) {
                     client={selectedClientForPoa} 
                     showToast={showToast} 
                     onClose={() => setIsPoaModalOpen(false)} 
-                    onSuccess={() => setRefreshTrigger(p => p + 1)} 
+                    onSuccess={() => setRefreshTrigger(p => p + 1)} // 🚀 هنا يرسل إشارة التحديث
                 />
             )}
         </div>
