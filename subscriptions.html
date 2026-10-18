@@ -7,66 +7,39 @@
     <title>MentraLawyer - بوابة الدخول</title>
     <link rel="icon" href="assets/log.png">
 
-    <!-- تحسين التحميل: preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
-    <!-- خط Cairo بشكل غير معطّل للصفحة -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap"></noscript>
 
-    <!-- Tailwind CSS (defer) -->
     <script src="assets/Tailwind.js" defer></script>
-    <!-- Font Awesome (non-blocking) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     
-    <!-- React & ReactDOM من cdnjs (أسرع من unpkg) -->
     <script crossorigin src="assets/react.production.min.js"></script>
     <script crossorigin src="assets/react-dom.production.min.js"></script>
-    <!-- Babel (تحميل متوازٍ مع React) -->
     <script src="assets/babel.min.js" defer></script>
-    
-    <!-- Dexie.js -->
     <script src="assets/dexie.min.js"></script>
-    
-    <!-- ملف قاعدة البيانات الموحد -->
     <script src="database.js"></script>
 
     <style>
-        body { 
-            font-family: 'Cairo', sans-serif; 
-            background: #0F172A; 
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        /* تأثيرات الخلفية المتحركة */
+        body { font-family: 'Cairo', sans-serif; background: #0F172A; min-height: 100vh; overflow-x: hidden; }
         .bg-shapes { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
         .shape { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; animation: float 20s infinite alternate; }
         .shape-1 { background: #1E3A8A; width: 400px; height: 400px; top: -100px; right: -100px; }
         .shape-2 { background: #D4AF37; width: 300px; height: 300px; bottom: -50px; left: -50px; animation-delay: -5s; }
-        
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-30px, 50px) scale(1.1); } }
-
-        /* تخصيص حقول الإدخال */
         .input-group { position: relative; transition: all 0.3s ease; }
-        .input-field {
-            width: 100%; padding: 1rem 1rem 1rem 3rem; border-radius: 1rem;
-            border: 2px solid #E2E8F0; background: #F8FAFC; outline: none;
-            color: #1E293B; font-weight: 700; transition: all 0.3s ease;
-        }
+        .input-field { width: 100%; padding: 1rem 1rem 1rem 3rem; border-radius: 1rem; border: 2px solid #E2E8F0; background: #F8FAFC; outline: none; color: #1E293B; font-weight: 700; transition: all 0.3s ease; }
         .input-field:focus { border-color: #D4AF37; background: #FFFFFF; box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15); }
         .input-icon { position: absolute; top: 50%; left: 1.25rem; transform: translateY(-50%); color: #94A3B8; transition: all 0.3s ease; }
         .input-field:focus ~ .input-icon { color: #D4AF37; }
-        
-        /* إخفاء شريط التمرير للقوائم الأفقية */
         ::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
-        
         .fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -77,18 +50,12 @@
         <div class="shape shape-2"></div>
     </div>
 
-    <!-- زر الرجوع للصفحة الرئيسية -->
     <a href="index.html" class="absolute top-6 left-6 z-50 flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-bold bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
         <i class="fas fa-arrow-left"></i> الرئيسية
     </a>
 
-        <!-- شاشة تحميل سريعة تظهر فوراً -->
     <style>
-        #sub-loader {
-            position:fixed;inset:0;background:#0F172A;
-            display:flex;flex-direction:column;align-items:center;justify-content:center;
-            z-index:9999;transition:opacity 0.4s ease;
-        }
+        #sub-loader { position:fixed;inset:0;background:#0F172A; display:flex;flex-direction:column;align-items:center;justify-content:center; z-index:9999;transition:opacity 0.4s ease; }
         #sub-loader.hidden{opacity:0;pointer-events:none;}
         .sub-spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,0.1);border-top-color:#D4AF37;border-radius:50%;animation:spin2 0.8s linear infinite;}
         @keyframes spin2{to{transform:rotate(360deg);}}
@@ -127,54 +94,38 @@
             const [error, setError] = useState('');
             const [showPassword, setShowPassword] = useState(false);
             
-            // حالات تسجيل الدخول السريع (المحمي بكلمة مرور)
             const [savedUsers, setSavedUsers] = useState([]);
             const [selectedSavedUser, setSelectedSavedUser] = useState(null);
             const [fastLoginPassword, setFastLoginPassword] = useState('');
 
-            const [formData, setFormData] = useState({
-                firmName: '', ownerName: '', email: '', password: ''
-            });
+            const [formData, setFormData] = useState({ firmName: '', ownerName: '', email: '', password: '' });
+            
+            // بيانات استعادة الدخول بمفتاح الأمان
+            const [recoveryData, setRecoveryData] = useState({ email: '', code: '' });
 
-            // التحقق من الجلسة وتهيئة قاعدة البيانات
             useEffect(() => {
                 const initApp = async () => {
                     try {
-                        // 1. الدخول التلقائي: إذا كان مسجل دخول بالفعل
                         const activeSession = localStorage.getItem('MentraLocal_Session');
-                        if (activeSession) {
-                            window.location.replace('dashboard.html');
-                            return;
-                        }
+                        if (activeSession) { window.location.replace('dashboard.html'); return; }
 
-                        // تهيئة قاعدة البيانات
                         if(window.initDatabase) await window.initDatabase();
 
-                        // 2. الدخول السريع: البحث عن كل المستخدمين المسجلين في هذا المتصفح
                         const users = await window.db.users.toArray();
                         if (users && users.length > 0) {
                             let enrichedUsers = [];
-                            
-                            // جلب أسماء المكاتب لكل مستخدم
                             for (let u of users) {
                                 const firm = await window.db.law_firms.get(u.firm_id);
-                                if (firm) {
-                                    enrichedUsers.push({ ...u, firm_name: firm.name });
-                                }
+                                if (firm) { enrichedUsers.push({ ...u, firm_name: firm.name }); }
                             }
-
                             if (enrichedUsers.length > 0) {
                                 setSavedUsers(enrichedUsers);
-                                
-                                // تحديد آخر مستخدم كافتراضي
                                 const lastUserId = localStorage.getItem('MentraLocal_LastUserID');
                                 const defaultUser = enrichedUsers.find(u => u.id == lastUserId) || enrichedUsers[enrichedUsers.length - 1];
-                                
                                 setSelectedSavedUser(defaultUser);
                                 setActiveTab('fast-login');
                             }
                         }
-
                         setTimeout(() => setIsChecking(false), 800);
                     } catch (err) {
                         console.error("خطأ في التهيئة:", err);
@@ -189,67 +140,48 @@
                 setError('');
             };
 
-            // تسجيل الدخول العادي
             const handleLogin = async (e) => {
-                e.preventDefault();
-                setLoading(true); setError('');
+                e.preventDefault(); setLoading(true); setError('');
                 try {
                     const { user, firm } = await window.FirmQueries.login(formData.email, formData.password);
-                    
-                    localStorage.setItem('MentraLocal_Session', JSON.stringify({
-                        user_id: user.id, firm_id: firm.id, name: user.name, role: user.role, firm_name: firm.name
-                    }));
+                    localStorage.setItem('MentraLocal_Session', JSON.stringify({ user_id: user.id, firm_id: firm.id, name: user.name, role: user.role, firm_name: firm.name }));
                     localStorage.setItem('MentraLocal_LastUserID', user.id);
-                    
                     window.location.replace('dashboard.html');
-                } catch (err) {
-                    setError(err.message || "حدث خطأ غير متوقع");
-                    setLoading(false);
-                }
+                } catch (err) { setError(err.message || "حدث خطأ غير متوقع"); setLoading(false); }
             };
 
-            // تسجيل الدخول السريع (بإدخال الباسورد فقط)
             const handleFastLogin = async (e) => {
                 e.preventDefault();
                 if (!selectedSavedUser) return;
-                if (!fastLoginPassword) {
-                    setError("الرجاء إدخال كلمة المرور");
-                    return;
-                }
-
+                if (!fastLoginPassword) { setError("الرجاء إدخال كلمة المرور"); return; }
                 setLoading(true); setError('');
                 try {
-                    // نستخدم نفس دالة التحقق من صحة الباسورد لضمان الأمان
                     const { user, firm } = await window.FirmQueries.login(selectedSavedUser.email, fastLoginPassword);
+                    localStorage.setItem('MentraLocal_Session', JSON.stringify({ user_id: user.id, firm_id: firm.id, name: user.name, role: user.role, firm_name: firm.name }));
+                    localStorage.setItem('MentraLocal_LastUserID', user.id);
+                    window.location.replace('dashboard.html');
+                } catch (err) { setError("كلمة المرور غير صحيحة"); setLoading(false); }
+            };
+
+            // 🌟 وظيفة الدخول باستخدام مفتاح الأمان (الجديدة) 🌟
+            const handleRecoveryLogin = async (e) => {
+                e.preventDefault(); setLoading(true); setError('');
+                try {
+                    const email = recoveryData.email.trim().toLowerCase();
+                    const user = await window.db.users.where('email').equalsIgnoreCase(email).first();
                     
+                    if (!user) throw new Error("لا يوجد حساب مسجل بهذا البريد الإلكتروني");
+                    if (!user.recovery_code) throw new Error("لم يتم إعداد مفتاح أمان لهذا الحساب مسبقاً من الإعدادات.");
+                    if (user.recovery_code !== recoveryData.code) throw new Error("مفتاح الأمان غير صحيح");
+                    if (user.is_active === 0) throw new Error("هذا الحساب موقوف");
+
+                    const firm = await window.db.law_firms.get(user.firm_id);
+                    
+                    // إنشاء الجلسة وتوجيه المستخدم للوحة التحكم
                     localStorage.setItem('MentraLocal_Session', JSON.stringify({
                         user_id: user.id, firm_id: firm.id, name: user.name, role: user.role, firm_name: firm.name
                     }));
                     localStorage.setItem('MentraLocal_LastUserID', user.id);
-                    
-                    window.location.replace('dashboard.html');
-                } catch (err) {
-                    setError("كلمة المرور غير صحيحة");
-                    setLoading(false);
-                }
-            };
-
-            // إنشاء مكتب جديد
-            const handleRegister = async (e) => {
-                e.preventDefault();
-                setLoading(true); setError('');
-                try {
-                    const existingUser = await window.db.users.where('email').equalsIgnoreCase(formData.email.trim()).first();
-                    if(existingUser) throw new Error("هذا البريد الإلكتروني مسجل مسبقاً في مكتب آخر.");
-
-                    const { firmId, userId } = await window.FirmQueries.createFirm(
-                        formData.firmName, formData.ownerName, formData.email, formData.password
-                    );
-
-                    localStorage.setItem('MentraLocal_Session', JSON.stringify({
-                        user_id: userId, firm_id: firmId, name: formData.ownerName, role: 'owner', firm_name: formData.firmName
-                    }));
-                    localStorage.setItem('MentraLocal_LastUserID', userId);
                     
                     window.location.replace('dashboard.html');
                 } catch (err) {
@@ -258,14 +190,23 @@
                 }
             };
 
-            // شاشة التحميل الأولية
+            const handleRegister = async (e) => {
+                e.preventDefault(); setLoading(true); setError('');
+                try {
+                    const existingUser = await window.db.users.where('email').equalsIgnoreCase(formData.email.trim()).first();
+                    if(existingUser) throw new Error("هذا البريد الإلكتروني مسجل مسبقاً في مكتب آخر.");
+                    const { firmId, userId } = await window.FirmQueries.createFirm(formData.firmName, formData.ownerName, formData.email, formData.password);
+                    localStorage.setItem('MentraLocal_Session', JSON.stringify({ user_id: userId, firm_id: firmId, name: formData.ownerName, role: 'owner', firm_name: formData.firmName }));
+                    localStorage.setItem('MentraLocal_LastUserID', userId);
+                    window.location.replace('dashboard.html');
+                } catch (err) { setError(err.message || "حدث خطأ غير متوقع"); setLoading(false); }
+            };
+
             if (isChecking) {
                 return (
                     <div className="flex flex-col items-center justify-center fade-up">
-                        <div className="w-20 h-20 bg-gradient-to-br from-[#D4AF37] to-yellow-600 rounded-2xl flex items-center justify-center text-white text-4xl shadow-[0_0_40px_rgba(212,175,55,0.4)] animate-pulse mb-6">
-                            <i className="fas fa-balance-scale"></i>
-                        </div>
-                        <h2 className="text-2xl font-black text-white tracking-wide">Mentra<span className="text-[#D4AF37]">Lawyer Lite</span></h2>
+                        <div className="w-20 h-20 bg-gradient-to-br from-[#D4AF37] to-yellow-600 rounded-2xl flex items-center justify-center text-white text-4xl shadow-[0_0_40px_rgba(212,175,55,0.4)] animate-pulse mb-6"><i className="fas fa-balance-scale"></i></div>
+                        <h2 className="text-2xl font-black text-white tracking-wide">Mentra<span className="text-[#D4AF37]">Lawyer    <span className="px-2 py-0.5 text-xs font-black uppercase tracking-wider text-amber-300 bg-amber-500/15 border border-amber-500/35 rounded-md shadow-[0_0_10px_rgba(212,175,55,0.2)]">Lite</span></span></h2>
                         <p className="text-slate-400 font-bold text-sm mt-2">جاري فحص حالة الحساب...</p>
                     </div>
                 );
@@ -274,101 +215,66 @@
             return (
                 <div className="w-full max-w-[420px] fade-up">
                     
-                    {/* الشعار والنصوص الترحيبية */}
-                    <div className="text-center mb-8">
-                        <div className="w-16 h-16 bg-gradient-to-br from-[#D4AF37] to-yellow-600 mx-auto rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg shadow-yellow-600/20 mb-4 transform transition hover:scale-105">
-                            <i className="fas fa-balance-scale"></i>
+                    {/* الشعار */}
+                    <div className="text-center mb-8 flex flex-col items-center justify-center">
+                        <div className="w-16 h-16 bg-gradient-to-br from-[#D4AF37] via-amber-500 to-yellow-600 rounded-2xl flex items-center justify-center text-slate-900 text-3xl shadow-lg shadow-amber-500/20 mb-4 transform transition hover:scale-105 duration-300"><i className="fas fa-scale-balanced"></i></div>
+                        <div className="flex items-center justify-center gap-2 mb-1">
+                            <span className="px-2 py-0.5 text-xs font-black uppercase tracking-wider text-amber-300 bg-amber-500/15 border border-amber-500/35 rounded-md shadow-[0_0_10px_rgba(212,175,55,0.2)]">Lite</span>
+                            <h1 className="text-3xl font-extrabold text-white tracking-tight">Mentra<span className="text-[#D4AF37]">Lawyer</span></h1>
                         </div>
-                        <h1 className="text-3xl font-black text-white tracking-tight mb-1">Mentra<span className="text-[#D4AF37]">Lawyer Lite</span></h1>
-                        <span className="inline-block bg-white/10 text-slate-300 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mt-2">
-                            <i className="fas fa-shield-alt text-emerald-400 mr-1"></i> Offline Edition
-                        </span>
+                        <span className="inline-flex items-center gap-1.5 bg-white/10 text-slate-300 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mt-2 shadow-sm"><i className="fas fa-shield-alt text-emerald-400"></i> Offline Edition</span>
                     </div>
 
-                    {/* البطاقة الرئيسية */}
                     <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden relative border border-slate-100">
                         
-                        {/* نظام التبويبات */}
-                        {activeTab !== 'fast-login' && (
+                        {/* الأزرار العلوية للمتنقل */}
+                        {activeTab !== 'fast-login' && activeTab !== 'recovery' && (
                             <div className="flex p-2 bg-slate-50 border-b border-slate-100">
-                                <button 
-                                    onClick={() => {setActiveTab('login'); setError('');}} 
-                                    className={`flex-1 py-3 text-sm font-black rounded-xl transition-all duration-300 ${activeTab === 'login' ? 'bg-white text-[#1E3A8A] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-                                >
-                                    الدخول لمكتبي
-                                </button>
-                                <button 
-                                    onClick={() => {setActiveTab('register'); setError('');}} 
-                                    className={`flex-1 py-3 text-sm font-black rounded-xl transition-all duration-300 ${activeTab === 'register' ? 'bg-white text-[#1E3A8A] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
-                                >
-                                    إنشاء مكتب جديد
-                                </button>
+                                <button onClick={() => {setActiveTab('login'); setError('');}} className={`flex-1 py-3 text-sm font-black rounded-xl transition-all duration-300 ${activeTab === 'login' ? 'bg-white text-[#1E3A8A] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>الدخول لمكتبي</button>
+                                <button onClick={() => {setActiveTab('register'); setError('');}} className={`flex-1 py-3 text-sm font-black rounded-xl transition-all duration-300 ${activeTab === 'register' ? 'bg-white text-[#1E3A8A] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>إنشاء مكتب جديد</button>
                             </div>
                         )}
 
                         <div className="p-6 sm:p-8">
                             
-                            {/* رسالة الخطأ */}
                             {error && (
                                 <div className="bg-rose-50 border border-rose-200 text-rose-600 p-4 rounded-2xl text-xs font-bold mb-6 flex items-start gap-3 fade-up">
-                                    <i className="fas fa-exclamation-circle text-lg mt-0.5"></i>
-                                    <span className="leading-relaxed">{error}</span>
+                                    <i className="fas fa-exclamation-circle text-lg mt-0.5"></i><span className="leading-relaxed">{error}</span>
                                 </div>
                             )}
 
-                            {/* ====== نموذج الدخول السريع (اختيار الحساب وإدخال الباسورد) ====== */}
+                            {/* الدخول السريع */}
                             {activeTab === 'fast-login' && selectedSavedUser && (
                                 <form onSubmit={handleFastLogin} className="text-center fade-up space-y-5">
-                                    
-                                    {/* قائمة اختيار المكاتب (تظهر فقط إذا كان هناك أكثر من مكتب محفوظ) */}
                                     {savedUsers.length > 1 && (
                                         <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2 mb-2 justify-center">
                                             {savedUsers.map(u => (
-                                                <button 
-                                                    key={u.id} type="button"
-                                                    onClick={() => { setSelectedSavedUser(u); setFastLoginPassword(''); setError(''); }}
-                                                    className={`p-2 rounded-2xl border-2 transition-all shrink-0 w-20 flex flex-col items-center ${selectedSavedUser.id === u.id ? 'border-[#D4AF37] bg-yellow-50/50 scale-105' : 'border-slate-100 bg-white opacity-60 hover:opacity-100'}`}
-                                                >
-                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black mb-1.5 transition-colors ${selectedSavedUser.id === u.id ? 'bg-[#1E3A8A] text-white' : 'bg-slate-200 text-slate-500'}`}>
-                                                        {u.name.charAt(0)}
-                                                    </div>
+                                                <button key={u.id} type="button" onClick={() => { setSelectedSavedUser(u); setFastLoginPassword(''); setError(''); }} className={`p-2 rounded-2xl border-2 transition-all shrink-0 w-20 flex flex-col items-center ${selectedSavedUser.id === u.id ? 'border-[#D4AF37] bg-yellow-50/50 scale-105' : 'border-slate-100 bg-white opacity-60 hover:opacity-100'}`}>
+                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black mb-1.5 transition-colors ${selectedSavedUser.id === u.id ? 'bg-[#1E3A8A] text-white' : 'bg-slate-200 text-slate-500'}`}>{u.name.charAt(0)}</div>
                                                     <p className="text-[9px] font-bold text-slate-700 whitespace-nowrap truncate w-full px-1">{u.firm_name}</p>
                                                 </button>
                                             ))}
                                         </div>
                                     )}
-
-                                    {/* معلومات الحساب المختار */}
                                     <div className="mb-2">
-                                        {savedUsers.length === 1 && (
-                                            <div className="w-20 h-20 bg-[#1E3A8A] text-white rounded-full flex items-center justify-center text-3xl font-black mx-auto mb-4 border-4 border-slate-50 shadow-lg">
-                                                {selectedSavedUser.name.charAt(0)}
-                                            </div>
-                                        )}
+                                        {savedUsers.length === 1 && (<div className="w-20 h-20 bg-[#1E3A8A] text-white rounded-full flex items-center justify-center text-3xl font-black mx-auto mb-4 border-4 border-slate-50 shadow-lg">{selectedSavedUser.name.charAt(0)}</div>)}
                                         <h2 className="text-xl font-black text-slate-800">أهلاً بك، {selectedSavedUser.name.split(' ')[0]}</h2>
                                         <p className="text-sm font-bold text-[#D4AF37] mt-1"><i className="fas fa-building mr-1"></i> {selectedSavedUser.firm_name}</p>
                                     </div>
-
-                                    {/* حقل كلمة المرور للتأكيد */}
                                     <div className="input-group relative text-right">
                                         <input type={showPassword ? "text" : "password"} value={fastLoginPassword} onChange={(e) => setFastLoginPassword(e.target.value)} required dir="ltr" className="input-field text-left placeholder:text-right pr-12" placeholder="أدخل كلمة المرور للمكتب" />
                                         <i className="fas fa-lock input-icon"></i>
-                                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-[#1E3A8A] transition-colors focus:outline-none">
-                                            <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                        </button>
+                                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-[#1E3A8A] transition-colors focus:outline-none"><i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
                                     </div>
-
                                     <button type="submit" disabled={loading} className="w-full bg-[#1E3A8A] hover:bg-blue-900 text-white font-black py-4 rounded-2xl shadow-lg shadow-blue-900/20 transition-all flex justify-center items-center gap-2 text-lg">
                                         {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fas fa-sign-in-alt"></i> تأكيد الدخول</>}
                                     </button>
-                                    
-                                    <button type="button" onClick={() => setActiveTab('login')} className="w-full text-slate-500 hover:text-slate-800 font-bold text-sm transition-colors mt-2 pb-2">
-                                        الدخول بحساب غير محفوظ
-                                    </button>
+                                    <button type="button" onClick={() => setActiveTab('recovery')} className="w-full text-amber-600 hover:text-amber-700 font-bold text-sm transition-colors mt-4">نسيت كلمة المرور؟</button>
+                                    <button type="button" onClick={() => setActiveTab('login')} className="w-full text-slate-500 hover:text-slate-800 font-bold text-sm transition-colors mt-2 pb-2">الدخول بحساب غير محفوظ</button>
                                 </form>
                             )}
 
-                            {/* ====== نموذج تسجيل الدخول العادي ====== */}
+                            {/* الدخول العادي */}
                             {activeTab === 'login' && (
                                 <form onSubmit={handleLogin} className="space-y-5 fade-up">
                                     <div className="input-group">
@@ -378,43 +284,56 @@
                                     <div className="input-group relative">
                                         <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} required dir="ltr" className="input-field text-left placeholder:text-right pr-12" placeholder="كلمة المرور" />
                                         <i className="fas fa-lock input-icon"></i>
-                                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-[#1E3A8A] transition-colors focus:outline-none">
-                                            <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                        </button>
+                                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-[#1E3A8A] transition-colors focus:outline-none"><i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
                                     </div>
                                     <button type="submit" disabled={loading} className="w-full bg-[#1E3A8A] hover:bg-blue-900 text-white font-black py-4 rounded-2xl shadow-lg shadow-blue-900/20 transition-all mt-2 flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed text-lg">
                                         {loading ? <i className="fas fa-circle-notch fa-spin"></i> : 'دخول للمكتب'}
                                     </button>
-                                    {savedUsers.length > 0 && (
-                                        <button type="button" onClick={() => setActiveTab('fast-login')} className="w-full text-center text-slate-500 hover:text-slate-800 font-bold text-sm transition-colors pt-2">
-                                            <i className="fas fa-bolt text-[#D4AF37] mr-1"></i> العودة لقائمة المكاتب المحفوظة
-                                        </button>
-                                    )}
+                                    <div className="flex justify-between items-center mt-2 px-1">
+                                        {savedUsers.length > 0 ? (
+                                            <button type="button" onClick={() => setActiveTab('fast-login')} className="text-slate-500 hover:text-slate-800 font-bold text-sm transition-colors"><i className="fas fa-bolt text-[#D4AF37] mr-1"></i> مكاتبي</button>
+                                        ) : <div></div>}
+                                        <button type="button" onClick={() => {setActiveTab('recovery'); setError('');}} className="text-[#D4AF37] hover:text-yellow-600 font-bold text-sm transition-colors">نسيت كلمة المرور؟</button>
+                                    </div>
                                 </form>
                             )}
 
-                            {/* ====== نموذج إنشاء مكتب ====== */}
-                            {activeTab === 'register' && (
-                                <form onSubmit={handleRegister} className="space-y-4 fade-up">
-                                    <div className="input-group">
-                                        <input type="text" name="firmName" value={formData.firmName} onChange={handleChange} required className="input-field pr-4" placeholder="اسم مكتب المحاماة" />
-                                        <i className="fas fa-building input-icon"></i>
+                            {/* 🌟 شاشة استعادة الدخول بمفتاح الأمان 🌟 */}
+                            {activeTab === 'recovery' && (
+                                <form onSubmit={handleRecoveryLogin} className="space-y-5 fade-up">
+                                    <div className="text-center mb-6">
+                                        <div className="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner"><i className="fas fa-shield-halved"></i></div>
+                                        <h3 className="text-lg font-black text-[#1E3A8A] mb-2">استعادة الدخول للنظام</h3>
+                                        <p className="text-xs font-bold text-slate-500 leading-relaxed">أدخل بريدك الإلكتروني ومفتاح الأمان (6 أرقام) الذي قمت بإنشائه مسبقاً من الإعدادات للوصول لبياناتك.</p>
                                     </div>
+                                    
                                     <div className="input-group">
-                                        <input type="text" name="ownerName" value={formData.ownerName} onChange={handleChange} required className="input-field pr-4" placeholder="اسم المحامي المدير" />
-                                        <i className="fas fa-user-tie input-icon"></i>
-                                    </div>
-                                    <div className="input-group">
-                                        <input type="email" name="email" value={formData.email} onChange={handleChange} required dir="ltr" className="input-field text-left placeholder:text-right" placeholder="البريد الإلكتروني" />
+                                        <input type="email" value={recoveryData.email} onChange={(e) => setRecoveryData({...recoveryData, email: e.target.value})} required dir="ltr" className="input-field text-left placeholder:text-right" placeholder="البريد الإلكتروني لحسابك" />
                                         <i className="fas fa-envelope input-icon"></i>
                                     </div>
-                                    <div className="input-group relative">
-                                        <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} required dir="ltr" className="input-field text-left placeholder:text-right pr-12" placeholder="كلمة المرور (6 أحرف على الأقل)" minLength="6" />
-                                        <i className="fas fa-lock input-icon"></i>
-                                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-[#1E3A8A] transition-colors focus:outline-none">
-                                            <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                        </button>
+                                    
+                                    <div className="input-group">
+                                        <input type="password" value={recoveryData.code} onChange={(e) => setRecoveryData({...recoveryData, code: e.target.value})} required maxLength="6" dir="ltr" className="input-field text-center tracking-[0.5em] font-black text-xl" placeholder="000000" />
+                                        <i className="fas fa-key input-icon"></i>
                                     </div>
+
+                                    <button type="submit" disabled={loading} className="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-4 rounded-2xl shadow-lg shadow-amber-500/20 transition-all mt-4 flex justify-center items-center gap-2 text-lg">
+                                        {loading ? <i className="fas fa-circle-notch fa-spin"></i> : <><i className="fas fa-unlock"></i> الدخول باستخدام المفتاح</>}
+                                    </button>
+
+                                    <button type="button" onClick={() => {setActiveTab('login'); setError('');}} className="w-full text-center text-slate-500 hover:text-slate-800 font-bold text-sm transition-colors pt-4 pb-2">
+                                        <i className="fas fa-arrow-right mr-1"></i> العودة لتسجيل الدخول
+                                    </button>
+                                </form>
+                            )}
+
+                            {/* إنشاء حساب */}
+                            {activeTab === 'register' && (
+                                <form onSubmit={handleRegister} className="space-y-4 fade-up">
+                                    <div className="input-group"><input type="text" name="firmName" value={formData.firmName} onChange={handleChange} required className="input-field pr-4" placeholder="اسم مكتب المحاماة" /><i className="fas fa-building input-icon"></i></div>
+                                    <div className="input-group"><input type="text" name="ownerName" value={formData.ownerName} onChange={handleChange} required className="input-field pr-4" placeholder="اسم المحامي المدير" /><i className="fas fa-user-tie input-icon"></i></div>
+                                    <div className="input-group"><input type="email" name="email" value={formData.email} onChange={handleChange} required dir="ltr" className="input-field text-left placeholder:text-right" placeholder="البريد الإلكتروني" /><i className="fas fa-envelope input-icon"></i></div>
+                                    <div className="input-group relative"><input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} required dir="ltr" className="input-field text-left placeholder:text-right pr-12" placeholder="كلمة المرور (6 أحرف على الأقل)" minLength="6" /><i className="fas fa-lock input-icon"></i><button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-[#1E3A8A] transition-colors focus:outline-none"><i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i></button></div>
                                     <button type="submit" disabled={loading} className="w-full bg-gradient-to-l from-[#D4AF37] to-yellow-500 hover:to-yellow-600 text-white font-black py-4 rounded-2xl shadow-lg shadow-yellow-500/30 transition-all mt-2 flex justify-center items-center gap-2 disabled:opacity-70 text-lg">
                                         {loading ? <i className="fas fa-circle-notch fa-spin"></i> : 'تأسيس المكتب وبدء العمل'}
                                     </button>
@@ -423,7 +342,6 @@
 
                         </div>
                         
-                        {/* تذييل البطاقة لحماية الخصوصية */}
                         <div className="bg-slate-50 p-4 text-center border-t border-slate-100">
                             <p className="text-[11px] font-bold text-slate-400 flex items-center justify-center gap-2">
                                 <i className="fas fa-lock text-emerald-500"></i> بياناتك محفوظة ومشفّرة على جهازك فقط
@@ -438,42 +356,26 @@
         root.render(<SubscriptionsApp />);
     </script>
     <script>
-    // التأكد من أن المتصفح يدعم Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw-v1.js') // تأكد من اسم ملف الـ Service Worker الخاص بك هنا
-            .then((registration) => {
-                console.log('✅ تم تسجيل الـ Service Worker بنجاح، النطاق:', registration.scope);
-
-                // الاستماع لأي تحديث جديد (مثلاً عند الانتقال من v1 إلى v2)
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw-v1.js').then((registration) => {
                 registration.addEventListener('updatefound', () => {
                     const newWorker = registration.installing;
                     if (newWorker) {
                         newWorker.addEventListener('statechange', () => {
-                            // إذا انتهى تثبيت الملف الجديد وكان هناك ملف قديم يعمل بالفعل
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                console.log('🔄 تم العثور على تحديث جديد (v2)، جاري إعادة التحميل...');
-                                // إعادة تحميل الصفحة تلقائياً لتطبيق التحديث فوراً
                                 window.location.reload();
                             }
                         });
                     }
                 });
-            })
-            .catch((error) => {
-                console.error('❌ فشل تسجيل الـ Service Worker:', error);
-            });
-    });
-
-    // لضمان دمج التحكم فوراً عند تفعيل السيرفيس وركر الجديد وعمل الكود بشكل متزامن
-    let refreshing = false;
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!refreshing) {
-            window.location.reload();
-            refreshing = true;
-        }
-    });
-}
-</script>
+            }).catch((error) => {});
+        });
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) { window.location.reload(); refreshing = true; }
+        });
+    }
+    </script>
 </body>
 </html>
