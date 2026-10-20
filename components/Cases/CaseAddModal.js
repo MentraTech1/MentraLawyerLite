@@ -13,6 +13,37 @@ window.CaseAddModal = function({ firmId, showToast, modalMode, editData, onClose
     const [courtSearch, setCourtSearch] = useState({ term: '', results: [], isSearching: false, display: null, isOpen: false });
     const [typeSearch, setTypeSearch] = useState({ term: '', results: [], isSearching: false, display: null, isOpen: false });
 
+    // 🌟 التعديل هنا: حقن البيانات الافتراضية في قاعدة البيانات (LocalStorage) إذا كانت غير موجودة
+    useEffect(() => {
+        const initDefaultSettings = () => {
+            const existingCourts = localStorage.getItem(`MentraLocal_Courts_${firmId}`);
+            if (!existingCourts || JSON.parse(existingCourts).length === 0) {
+                const defaultCourts = [
+                    { id: 1, name: 'محكمة القاهرة الجديدة الابتدائية (التجمع الخامس)' },
+                    { id: 2, name: 'محكمة شمال القاهرة الابتدائية (مجمع العباسية)' },
+                    { id: 3, name: 'محكمة استئناف القاهرة (دار القضاء العالي)' },
+                    { id: 4, name: 'محكمة الأسرة (مجمع محاكم الزنانيري)' },
+                    { id: 5, name: 'مجلس الدولة (محكمة القضاء الإداري)' }
+                ];
+                localStorage.setItem(`MentraLocal_Courts_${firmId}`, JSON.stringify(defaultCourts));
+            }
+
+            const existingTypes = localStorage.getItem(`MentraLocal_CaseTypes_${firmId}`);
+            if (!existingTypes || JSON.parse(existingTypes).length === 0) {
+                const defaultTypes = [
+                    { id: 1, name: 'مدني وتعويضات' },
+                    { id: 2, name: 'جنح وجنايات' },
+                    { id: 3, name: 'أسرة وأحوال شخصية' },
+                    { id: 4, name: 'منازعات عمالية' },
+                    { id: 5, name: 'قضاء إداري ومجلس دولة' }
+                ];
+                localStorage.setItem(`MentraLocal_CaseTypes_${firmId}`, JSON.stringify(defaultTypes));
+            }
+        };
+
+        initDefaultSettings();
+    }, [firmId]);
+
     // تعبئة البيانات في حالة التعديل
     useEffect(() => {
         if (modalMode === 'edit' && editData) {
@@ -33,29 +64,15 @@ window.CaseAddModal = function({ firmId, showToast, modalMode, editData, onClose
     const getSavedCourts = () => {
         try {
             const saved = localStorage.getItem(`MentraLocal_Courts_${firmId}`);
-            if (saved) return JSON.parse(saved);
-        } catch(e) {}
-        return [
-            { id: 1, name: 'محكمة القاهرة الجديدة الابتدائية (التجمع الخامس)' },
-            { id: 2, name: 'محكمة شمال القاهرة الابتدائية (مجمع العباسية)' },
-            { id: 3, name: 'محكمة استئناف القاهرة (دار القضاء العالي)' },
-            { id: 4, name: 'محكمة الأسرة (مجمع محاكم الزنانيري)' },
-            { id: 5, name: 'مجلس الدولة (محكمة القضاء الإداري)' }
-        ];
+            return saved ? JSON.parse(saved) : [];
+        } catch(e) { return []; }
     };
 
     const getSavedTypes = () => {
         try {
             const saved = localStorage.getItem(`MentraLocal_CaseTypes_${firmId}`);
-            if (saved) return JSON.parse(saved);
-        } catch(e) {}
-        return [
-            { id: 1, name: 'مدني وتعويضات' },
-            { id: 2, name: 'جنح وجنايات' },
-            { id: 3, name: 'أسرة وأحوال شخصية' },
-            { id: 4, name: 'منازعات عمالية' },
-            { id: 5, name: 'قضاء إداري ومجلس دولة' }
-        ];
+            return saved ? JSON.parse(saved) : [];
+        } catch(e) { return []; }
     };
 
     const handleSearchClient = async (e) => {
@@ -95,7 +112,6 @@ window.CaseAddModal = function({ firmId, showToast, modalMode, editData, onClose
         setTypeSearch(prev => ({ ...prev, results, isOpen: true }));
     };
 
-    // 🚀 التعديل هنا: استخدام (prev) لضمان عدم ضياع البيانات عند النقر السريع
     const selectItem = (type, item) => {
         if (type === 'client') {
             setFormData(prev => ({ ...prev, client_id: item.id }));
@@ -115,7 +131,6 @@ window.CaseAddModal = function({ firmId, showToast, modalMode, editData, onClose
         if (type === 'type') { setFormData(prev => ({ ...prev, case_type_id: '' })); setTypeSearch(prev => ({ ...prev, display: null })); }
     };
 
-    // 🚀 التعديل هنا: رسائل خطأ دقيقة بدلاً من الصمت، وتحويل الـ ID لأرقام بشكل آمن
     const handleSaveCase = async (e) => {
         e.preventDefault();
         
@@ -306,7 +321,6 @@ window.CaseAddModal = function({ firmId, showToast, modalMode, editData, onClose
                         </div>
 
                         <div className="pt-2">
-                            {/* 🚀 التعديل هنا: تمت إزالة شرط التعطيل المعقد للسماح بالضغط وظهور التنبيه */}
                             <button type="submit" disabled={isLoading} className="w-full bg-[#1E3A8A] hover:bg-blue-900 text-white font-black py-3.5 md:py-4 rounded-xl shadow-lg transition-all text-sm md:text-base flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50">
                                 {isLoading ? <i className="fas fa-spinner fa-spin"></i> : <><i className="fas fa-save"></i> {modalMode === 'edit' ? 'حفظ التعديلات' : 'حفظ القضية في الأرشيف'}</>}
                             </button>

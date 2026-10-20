@@ -2,281 +2,338 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دليل استخدام نظام إدارة مكتب المحاماة</title>
-    <link rel="icon" href="assets/log.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0B1120">
+    
+    <title>دليل التشغيل | MentraLawyer Lite</title>
+    <link rel="icon" type="image/png" href="assets/log.png">
 
-    <!-- الخطوط والأيقونات -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Tailwind CSS -->
     <script src="assets/Tailwind.js"></script>
     
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
-        .step-card:hover { transform: translateY(-5px); }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: #0B1120;
+            color: #F8FAFC;
+            overflow-x: hidden; 
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .text-gold { color: #D4AF37; }
+        .bg-gold { background-color: #D4AF37; }
+        
+        .hero-glow-1 { background: radial-gradient(circle, rgba(30, 58, 138, 0.4) 0%, rgba(11, 17, 32, 0) 70%); }
+        .hero-glow-2 { background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(11, 17, 32, 0) 70%); }
+        
+        .glass-nav { background: rgba(11, 17, 32, 0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .glass-card-hover:hover { transform: translateY(-4px); border-color: rgba(212, 175, 55, 0.4); box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5); }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0B1120; }
+        ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
     </style>
 </head>
-<body class="antialiased selection:bg-[#D4AF37] selection:text-white pb-20">
+<body class="selection:bg-[#D4AF37] selection:text-slate-900 pb-20">
 
-    <!-- ====== Header / الهيدر ====== -->
-    <header class="bg-[#1E3A8A] text-white py-16 relative overflow-hidden shadow-xl">
-        <!-- الزخرفة الخلفية -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10">
-            <i class="fas fa-balance-scale absolute -left-10 -top-10 text-[20rem]"></i>
-        </div>
+    <!-- ================= NAVBAR ================= -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 sm:h-20">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                    <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#D4AF37] via-amber-500 to-yellow-600 flex items-center justify-center text-slate-900 shadow-md shadow-amber-500/20 shrink-0">
+                        <i class="fas fa-book-open text-base sm:text-xl"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-black text-lg sm:text-2xl tracking-tight text-white">دليل <span class="text-gold">التشغيل</span></span>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- ====== زر العودة للنظام ====== -->
-        <div class="absolute top-6 right-6 z-30">
-            <a href="index.html" class="flex items-center gap-2 bg-white/10 hover:bg-white shadow-lg hover:shadow-white/20 backdrop-blur-md border border-white/20 hover:text-[#1E3A8A] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 active:scale-95 group">
-                <i class="fas fa-arrow-right transform group-hover:-translate-x-1 transition-transform"></i>
-                العودة للنظام
-            </a>
-        </div>
-        <!-- ============================== -->
+                <!-- زر العودة للنظام -->
+                <a href="index.html" class="bg-white/5 hover:bg-white/10 text-white px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-white/10 font-bold text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center gap-2">
+                    <span>العودة للرئيسية</span>
+                    <i class="fas fa-arrow-left text-xs text-gold"></i>
+                </a>
 
-        <div class="container mx-auto px-4 relative z-10 text-center mt-4">
-            <div class="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center text-4xl text-[#D4AF37] mx-auto mb-6 border border-white/20 shadow-lg">
-                <i class="fas fa-book-open"></i>
             </div>
-            <h1 class="text-3xl md:text-5xl font-black mb-4">دليل التشغيل الشامل</h1>
-            <p class="text-blue-200 text-lg md:text-xl font-semibold max-w-2xl mx-auto">
-                خطوة بخطوة.. تعرف على كيفية إدارة مكتبك، قضاياك، وموكليك باستخدام النظام الذكي الأقوى والأكثر أماناً.
+        </div>
+    </nav>
+
+    <!-- ================= HERO SECTION ================= -->
+    <header class="relative pt-28 pb-12 sm:pt-40 sm:pb-20 overflow-hidden">
+        <!-- الإضاءات الخلفية -->
+        <div class="absolute top-0 right-0 w-72 sm:w-[500px] h-72 sm:h-[500px] hero-glow-1 pointer-events-none"></div>
+        <div class="absolute top-1/4 left-0 w-72 sm:w-[500px] h-72 sm:h-[500px] hero-glow-2 pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <div class="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
+                <i class="fas fa-graduation-cap text-emerald-400 text-xs"></i>
+                <span class="text-[11px] sm:text-xs font-bold text-emerald-400 whitespace-nowrap">
+                    شرح بالصور خطوة بخطوة
+                </span>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-snug sm:leading-tight max-w-4xl mx-auto mb-4 sm:mb-6 text-white">
+                تعلم كيف تدير مكتبك ببراعة مع <br>
+                <span class="bg-gradient-to-r from-amber-200 via-amber-400 to-[#D4AF37] bg-clip-text text-transparent">MentraLawyer</span>
+            </h1>
+
+            <p class="text-xs sm:text-sm md:text-lg text-slate-400 max-w-2xl mx-auto font-semibold leading-relaxed">
+                تعرف على كيفية إدارة قضاياك، موكليك، جلساتك، وحساباتك بكل سهولة وأمان عبر هذا الدليل الشامل.
             </p>
         </div>
     </header>
 
-    <!-- ====== Main Content / الخطوات ====== -->
-    <main class="container mx-auto px-4 max-w-5xl mt-[-2rem] relative z-20 space-y-8">
+    <!-- ================= STEPS CONTENT ================= -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 relative z-20 space-y-6 sm:space-y-8">
 
         <!-- Step 0 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-sign-in-alt"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">البداية: تسجيل الدخول (subscriptions)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">البداية: تسجيل الدخول (subscriptions)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         هذه هي واجهة الدخول الأولى للنظام، حيث تقوم بإنشاء حساب مكتبك أو تسجيل الدخول لحسابك الموجود مسبقاً لبدء العمل في بيئة آمنة.
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step.PNG" alt="شاشة تسجيل الدخول" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step.PNG" alt="شاشة تسجيل الدخول" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/D4AF37?text=صورة+step.png'">
             </div>
         </section>
 
         <!-- Step 1 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-home"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">الشاشة الرئيسية ولوحة القيادة (main)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">الشاشة الرئيسية ولوحة القيادة (main)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         تعطيك نظرة عامة وإحصائيات سريعة عن عدد القضايا، الموكلين، والجلسات القادمة اليوم، لتكون على اطلاع دائم بحالة المكتب.
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step1.PNG" alt="الشاشة الرئيسية" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step1.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step1.PNG" alt="الشاشة الرئيسية" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/10B981?text=صورة+step1.png'">
             </div>
         </section>
 
         <!-- Step 2 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">الأجندة ومواعيد الجلسات (agenda)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">الأجندة ومواعيد الجلسات (agenda)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         من هنا يمكنك إدارة جدولك الزمني بالكامل، إضافة مواعيد الجلسات، المرافعة، والمواعيد الإدارية مع فلترة ذكية للتواريخ.
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step2.PNG" alt="الأجندة" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step2.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step2.PNG" alt="الأجندة" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/F59E0B?text=صورة+step2.png'">
             </div>
         </section>
 
         <!-- Step 3 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-gold rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-gavel"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">إدارة القضايا (cases)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">إدارة القضايا (cases)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         قلب النظام النابض. سجل قضاياك، أرقامها، المحاكم المختصة، واربطها بالموكلين لتتمكن من الوصول لبيانات أي قضية بضغطة زر.
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step3.PNG" alt="إدارة القضايا" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step3.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step3.PNG" alt="إدارة القضايا" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/D4AF37?text=صورة+step3.png'">
             </div>
         </section>
 
         <!-- Step 4 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-users"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">سجل الموكلين (clients)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">سجل الموكلين (clients)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         قاعدة بيانات شاملة لعملائك وموكليك، تحتوي على أسمائهم، أرقام هواتفهم، والرقم القومي، مع إمكانية البحث السريع عن أي موكل.
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step4.PNG" alt="الموكلين" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step4.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step4.PNG" alt="الموكلين" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/A855F7?text=صورة+step4.png'">
             </div>
         </section>
 
         <!-- Step 5 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-orange-500/10 border border-orange-500/20 text-orange-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-file-pdf"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">الأرشيف والمستندات (documents)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">الأرشيف والمستندات (documents)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         تخلص من الأوراق المتراكمة! ارفع صور التوكيلات، محاضر الجلسات، والمستندات الخاصة بكل قضية للرجوع إليها في أي وقت بسهولة.
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step5.PNG" alt="المستندات" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step5.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step5.PNG" alt="المستندات" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/F97316?text=صورة+step5.png'">
             </div>
         </section>
 
         <!-- Step 6 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-teal-100 text-teal-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-teal-500/10 border border-teal-500/20 text-teal-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-file-invoice-dollar"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">الحسابات والماليات (accounting)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">الحسابات والماليات (accounting)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         نظام مالي متكامل يسجل إيرادات المكتب (أتعاب القضايا) ومصروفات التشغيل، مع حساب تلقائي لصافي الربح والمبالغ الآجلة.
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step6.PNG" alt="الماليات" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step6.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step6.PNG" alt="الماليات" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/14B8A6?text=صورة+step6.png'">
             </div>
         </section>
 
         <!-- Step 7 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-slate-200 text-slate-700 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-slate-500/10 border border-slate-500/20 text-slate-300 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-cog"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">إعدادات النظام (settings)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">إعدادات النظام (settings)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         منطقة التحكم الخاصة بالمدير. يمكنك تعديل اسم المكتب، تغيير كلمة المرور، أو حتى مسح البيانات بالكامل (إعادة ضبط المصنع).
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step7.PNG" alt="الإعدادات" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step7.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step7.PNG" alt="الإعدادات" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/94A3B8?text=صورة+step7.png'">
             </div>
         </section>
 
         <!-- Step 8 -->
-        <section class="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden transition-all duration-300 step-card">
-            <div class="p-6 md:p-8 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
-                <div class="w-16 h-16 shrink-0 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center text-2xl font-black shadow-inner">
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden transition-all duration-300 glass-card-hover">
+            <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row items-center md:items-start gap-4 text-center md:text-right">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 shrink-0 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-black">
                     <i class="fas fa-database"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-black text-[#1E3A8A] mb-2">النسخ الاحتياطي واستعادة البيانات (backup)</h2>
-                    <p class="text-slate-500 font-semibold leading-relaxed text-sm md:text-base">
+                    <h2 class="text-lg sm:text-2xl font-black text-white mb-2">النسخ الاحتياطي واستعادة البيانات (backup)</h2>
+                    <p class="text-slate-400 font-semibold leading-relaxed text-xs sm:text-sm">
                         أهم خطوة لحماية مجهودك. قم بتحميل نسخة احتياطية من كافة بياناتك محلياً على جهازك أو فلاشة، واستعدها في أي وقت بضغطة زر.
                     </p>
                 </div>
             </div>
-            <div class="p-4 bg-slate-200/50 flex justify-center">
-                <img src="assets/step8.PNG" alt="النسخ الاحتياطي" class="max-w-full rounded-xl shadow-md border border-slate-200" onerror="this.src='https://via.placeholder.com/800x450.png?text=صورة+step8.png+غير+موجودة'">
+            <div class="p-4 sm:p-6 bg-[#050B14]/80 flex justify-center">
+                <img src="assets/step8.PNG" alt="النسخ الاحتياطي" class="max-w-full rounded-xl sm:rounded-2xl border border-white/10 shadow-2xl opacity-90 hover:opacity-100 transition-opacity" onerror="this.src='https://via.placeholder.com/800x450/0B1120/6366F1?text=صورة+step8.png'">
             </div>
         </section>
 
-        <!-- ====== Support & Contact Section / الدعم الفني ====== -->
-        <section class="bg-gradient-to-br from-[#1E3A8A] to-blue-900 rounded-3xl shadow-2xl overflow-hidden relative mt-16 text-center text-white p-10 md:p-16">
-            <!-- Decorative circles -->
-            <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
-            <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-green-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <!-- ====== Support & Contact Section ====== -->
+        <section class="glass-card rounded-[1.5rem] sm:rounded-[2.5rem] p-8 sm:p-12 mt-12 sm:mt-16 text-center relative overflow-hidden border border-emerald-500/20">
+            <!-- Glow background -->
+            <div class="absolute inset-0 bg-emerald-500/5 pointer-events-none"></div>
             
-            <div class="relative z-10">
-                <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center text-5xl mx-auto mb-6 shadow-xl shadow-black/20">
-                    <i class="fab fa-whatsapp text-[#25D366]"></i>
+            <div class="relative z-10 flex flex-col items-center">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-3xl sm:text-4xl mb-5 sm:mb-6 shadow-xl">
+                    <i class="fab fa-whatsapp"></i>
                 </div>
                 
-                <h2 class="text-3xl md:text-4xl font-black mb-4">تحتاج إلى مساعدة؟</h2>
-                <p class="text-blue-200 text-lg md:text-xl font-semibold max-w-xl mx-auto mb-10 leading-relaxed">
+                <h2 class="text-xl sm:text-3xl md:text-4xl font-black text-white mb-3">تحتاج إلى مساعدة؟</h2>
+                <p class="text-slate-400 text-xs sm:text-sm md:text-base font-semibold max-w-xl mx-auto mb-8 leading-relaxed">
                     نحن دائماً هنا لدعمك. إذا واجهتك أي مشكلة، أو كان لديك استفسار حول كيفية استخدام النظام، لا تتردد في التواصل معنا مباشرة.
                 </p>
                 
-                <a href="https://wa.me/201211934816" target="_blank" class="inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-green-500 text-white px-8 py-5 rounded-2xl text-2xl font-black shadow-lg shadow-green-600/30 transition-all active:scale-95">
-                    <i class="fas fa-headset text-3xl"></i>
+                <a href="https://wa.me/201211934816" target="_blank" class="inline-flex items-center justify-center gap-2.5 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl text-sm sm:text-lg font-black shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
+                    <i class="fas fa-headset text-lg sm:text-xl"></i>
                     <span dir="ltr">012 119 34 816</span>
                 </a>
                 
-                <p class="mt-6 text-sm text-blue-300 font-bold">
+                <p class="mt-5 text-[10px] sm:text-xs text-emerald-400 font-bold">
                     <i class="fas fa-clock mr-1"></i> متاحون للرد على استفساراتكم عبر الواتساب
                 </p>
             </div>
         </section>
 
     </main>
-<script>
-    // التأكد من أن المتصفح يدعم Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw-v1.js') // تأكد من اسم ملف الـ Service Worker الخاص بك هنا
-            .then((registration) => {
-                console.log('✅ تم تسجيل الـ Service Worker بنجاح، النطاق:', registration.scope);
 
-                // الاستماع لأي تحديث جديد (مثلاً عند الانتقال من v1 إلى v2)
-                registration.addEventListener('updatefound', () => {
-                    const newWorker = registration.installing;
-                    if (newWorker) {
-                        newWorker.addEventListener('statechange', () => {
-                            // إذا انتهى تثبيت الملف الجديد وكان هناك ملف قديم يعمل بالفعل
-                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                console.log('🔄 تم العثور على تحديث جديد (v2)، جاري إعادة التحميل...');
-                                // إعادة تحميل الصفحة تلقائياً لتطبيق التحديث فوراً
-                                window.location.reload();
+    <!-- ================= FOOTER ================= -->
+    <footer class="mt-16 bg-[#080D1A] py-6 sm:py-8 border-t border-white/5 text-slate-500 text-[10px] sm:text-xs font-bold text-center">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 MentraLawyer. دليل الاستخدام - جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script>
+        // التأكد من أن المتصفح يدعم Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw-v1.js') // تأكد من اسم ملف الـ Service Worker الخاص بك هنا
+                    .then((registration) => {
+                        console.log('✅ تم تسجيل الـ Service Worker بنجاح، النطاق:', registration.scope);
+
+                        // الاستماع لأي تحديث جديد
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            if (newWorker) {
+                                newWorker.addEventListener('statechange', () => {
+                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        console.log('🔄 تم العثور على تحديث جديد (v2)، جاري إعادة التحميل...');
+                                        window.location.reload();
+                                    }
+                                });
                             }
                         });
-                    }
-                });
-            })
-            .catch((error) => {
-                console.error('❌ فشل تسجيل الـ Service Worker:', error);
+                    })
+                    .catch((error) => {
+                        console.error('❌ فشل تسجيل الـ Service Worker:', error);
+                    });
             });
-    });
 
-    // لضمان دمج التحكم فوراً عند تفعيل السيرفيس وركر الجديد وعمل الكود بشكل متزامن
-    let refreshing = false;
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!refreshing) {
-            window.location.reload();
-            refreshing = true;
+            // لضمان دمج التحكم فوراً عند تفعيل السيرفيس وركر الجديد وعمل الكود بشكل متزامن
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    window.location.reload();
+                    refreshing = true;
+                }
+            });
         }
-    });
-}
-</script>
+    </script>
 </body>
 </html>

@@ -13,6 +13,8 @@ window.Module_Cases = function(props) {
                 'components/Cases/CasesPagination.js',
                 'components/Cases/CasesPromo.js',
                 'components/Cases/CaseAddModal.js',
+                'components/Cases/CaseSessionAddEditModal.js', // نافذة اضافة وتعديل الجلسة
+                'components/Cases/CaseSessionsView.js',        // 🌟 الشاشة الكاملة الجديدة
                 'components/Cases/Module_Cases_Container.js'
             ];
 

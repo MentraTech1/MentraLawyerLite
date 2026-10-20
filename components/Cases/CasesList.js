@@ -1,6 +1,6 @@
 // المسار: components/Cases/CasesList.js
 
-window.CasesList = function({ tableData, openEditModal, handleDelete }) {
+window.CasesList = function({ tableData, openEditModal, handleDelete, openSessionsView }) {
     
     const getStatusBadge = (status) => {
         switch(status) {
@@ -24,7 +24,7 @@ window.CasesList = function({ tableData, openEditModal, handleDelete }) {
     return (
         <div className="bg-transparent md:bg-white rounded-none md:rounded-3xl border-none md:border md:border-slate-200 md:shadow-sm overflow-hidden">
             
-            {/* عرض الموبايل (Cards) */}
+            {/* عرض الموبايل */}
             <div className="md:hidden flex flex-col gap-3">
                 {tableData.map((c) => (
                     <div key={c.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 relative overflow-hidden">
@@ -51,6 +51,9 @@ window.CasesList = function({ tableData, openEditModal, handleDelete }) {
                         </div>
 
                         <div className="flex gap-2 pt-3 border-t border-slate-50">
+                            <button onClick={() => openSessionsView(c)} className="flex-1 bg-blue-50 text-blue-700 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 hover:bg-[#1E3A8A] hover:text-white transition-colors">
+                                <i className="fas fa-calendar-check"></i> الجلسات
+                            </button>
                             <button onClick={() => openEditModal(c)} className="flex-1 bg-emerald-50 text-emerald-700 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 hover:bg-emerald-500 hover:text-white transition-colors">
                                 <i className="fas fa-pen"></i> تعديل
                             </button>
@@ -62,7 +65,7 @@ window.CasesList = function({ tableData, openEditModal, handleDelete }) {
                 ))}
             </div>
 
-            {/* عرض الديسكتوب (Table) */}
+            {/* عرض الديسكتوب */}
             <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-right">
                     <thead>
@@ -96,6 +99,7 @@ window.CasesList = function({ tableData, openEditModal, handleDelete }) {
                                 </td>
                                 <td className="px-6 py-4">
                                     <div className="flex items-center justify-center gap-2">
+                                        <button onClick={() => openSessionsView(c)} className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-[#1E3A8A] hover:text-white transition-colors" title="سجل الجلسات"><i className="fas fa-calendar-check"></i></button>
                                         <button onClick={() => openEditModal(c)} className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-colors" title="تعديل القضية"><i className="fas fa-pen"></i></button>
                                         <button onClick={() => handleDelete(c.id)} className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-colors" title="حذف القضية"><i className="fas fa-trash"></i></button>
                                     </div>
